@@ -32,9 +32,11 @@ def search_query(q):
     # Search for the document.
 
     query = {
+      "size": 5,
       "query": {
-        "match": {
-            "name" : q
+        "multi_match": {
+          "query" : q,
+          "fields": ["name","description","modalidad"]
         }
       }
     }
@@ -43,8 +45,8 @@ def search_query(q):
         body = query,
         index = index_name
     )
-    print('\nSearch results:')
-    print(response)
+    #print('\nSearch results:')
+    #print(response)
     return response
 
 def search():
@@ -60,18 +62,21 @@ def search():
         body=query,
         index=index_name
     )
-    print('\nSearch results:')
-    print(response)
+    #print('\nSearch results:')
+    #print(response)
     return response
 
 
-def add_document(user_id,name,description):
+def add_document(user_id,clase):
 
     # Add a document to the index.
     document = {
-        'name': name,
+        'name': clase.name,
         'user_id': user_id,
-        'description': description
+        'description': clase.description,
+        'duracion': clase.duracion,
+        'precio' : clase.precio,
+        'modalidad': clase.modalidad
     }
 
     response = client.index(
@@ -80,15 +85,15 @@ def add_document(user_id,name,description):
         refresh=True
     )
 
-    print('\nAdding document:')
-    print(response)
+    #print('\nAdding document:')
+    #print(response)
 
 def delete_all():
     # Delete the document.
     response = client.delete(
         index=index_name,
-        id='jiNF84MBB2WVqVtDi4vc'
+        id='lCOW84MBB2WVqVtDxosX'
     )
 
-    print('\nDeleting document:')
-    print(response)
+    #print('\nDeleting document:')
+    #print(response)

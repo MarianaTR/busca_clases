@@ -4,32 +4,66 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="/">BC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/">Sign In</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/login">Log In</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
 </head>
 <body>
-    <div class="sidenav">
-         <div class="login-main-text">
-            <h2>Application<br> Login Page</h2>
-            <p>Login or register from here to access.</p>
+    <div class="sidenav container ">
+         <div class="login-main-text" style="text-align:center">
+            <h2>Login</h2>
+            <p>Por favor, rellene los siguientes datos para crearte un perfil como profesor</p>
          </div>
       </div>
-      <div class="main">
-         <div class="col-md-6 col-sm-12">
-            <div class="login-form">
-               <form method="post">
+      <div class="main container" style="margin-left:30%">
+         <div class="col-md-6 col-sm-12 justify-content-around" style="background-color: cadetblue">
+            <div class="login-form " >
+               <form method="post" >
                   <div class="form-group">
-                     <label>User Name</label>
-                     <input type="text" class="form-control" placeholder="User Name" name="user">
+                     <label>Nombre del usuario</label>
+                     <input type="text" class="form-control" placeholder="Tu nombre" name="user" required>
                   </div>
                    <div class="form-group">
                      <label>Email</label>
-                     <input type="text" class="form-control" placeholder="User Name" name="email">
+                     <input type="text" class="form-control" placeholder="Email" name="email" required>
+                  </div>
+                   <div class="form-group">
+                     <label>Teléfono</label>
+                     <input type="text" class="form-control" placeholder="Teléfono" name="phone" required>
+                  </div>
+                   <div class="form-group">
+                     <label>Universidad</label>
+                     <input type="text" class="form-control" placeholder="Universidad" name="uni" required>
+                  </div>
+                   <div class="form-group">
+                     <label>Cargo</label>
+                     <input type="text" class="form-control" placeholder="Cargo" name="cargo" required>
+                  </div>
+                   <div class="form-group">
+                     <label>Dirección</label>
+                     <input type="text" class="form-control" placeholder="Dirección" name="dir" required>
                   </div>
                   <div class="form-group">
-                     <label>Password</label>
-                     <input type="password" class="form-control" placeholder="Password" name="password">
+                     <label>Contraseña</label>
+                     <input type="password" class="form-control" placeholder="Contraseña" name="password" required>
                   </div>
 
-                  <button type="submit" class="btn btn-secondary">Register</button>
+                  <button type="submit" class="btn btn-success" style="color: white">Registrarme</button>
                </form>
             </div>
          </div>

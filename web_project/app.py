@@ -61,9 +61,9 @@ def hello_world():  # put application's code here
 
 
 
-@app.route('/profile/<usr>')
-def profile(usr):
-    return render_template("profile.html", usr = usr)
+@app.route('/profile/<usr>&<usr_id>')
+def profile(usr, usr_id):
+    return render_template("profile.html", usr = usr, usr_id=usr_id)
 
 @app.route('/login', methods=["POST","GET"])
 def login():
@@ -93,13 +93,27 @@ def login():
             pass
         else:
         """
-        return redirect(url_for("profile", usr=user))
+        return redirect(url_for("profile", usr=user_name, usr_id=user_id))
     else:
         return render_template("login.html")
 
 @app.route('/admin')
 def admin():
     return render_template("view.html", values=Clase.query.all())
+
+@app.route('/create_class/<user>', methods=['POST','GET'])
+def create_clases(user):
+    if request.method == "POST":
+        name = request.form["user"]
+        description = request.form["description"]
+        user_id = user
+        clase = Clase(user_id, name, description)
+        db.session.add(clase)
+        db.session.commit()
+        add_document(user_id, name, description)
+        return redirect(url_for("index"))
+    else:
+        return  render_template("create_clase.html")
 
 """@app.route("/<usr>")
 def otro(usr):

@@ -1,9 +1,9 @@
 from opensearchpy import OpenSearch
+import requests
 
 
 
-
-host = 'client'
+host = 'localhost'
 port = 9200
 #auth = ('admin', 'admin') # For testing only. Don't store credentials in code.
 #ca_certs_path = '/full/path/to/root-ca.pem' # Provide a CA bundle if you use intermediate CAs with your root CA.
@@ -13,8 +13,8 @@ port = 9200
 # client_key_path = '/full/path/to/client-key.pem'
 
 # Create the client with SSL/TLS enabled, but hostname verification disabled.
-try :
-    client = OpenSearch(
+
+client = OpenSearch(
         hosts = [{'host': host, 'port': port}],
         http_compress = True, # enables gzip compression for request bodies
         #http_auth = auth,
@@ -26,8 +26,8 @@ try :
         #ssl_show_warn = False,
         #ca_certs = ca_certs_path
     )
-except:
-    print("no se ha podido establecer conexion")
+
+
 
 
 index_name="iaps-index"
@@ -52,14 +52,14 @@ def search_query(q):
     )
     #print('\nSearch results:')
     #print(response)
+
     return response
 
 def search():
     # Search for the document.
-
+    """
     query = {
         "query": {
-            "match_all": {}
         }
     }
 
@@ -69,6 +69,9 @@ def search():
     )
     #print('\nSearch results:')
     #print(response)
+"""
+    response = requests.get('http://opensearch_node1:9200/iaps-index/_search')
+    response = response.json()
     return response
 
 

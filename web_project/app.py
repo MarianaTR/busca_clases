@@ -5,6 +5,7 @@ from utils.db import db
 from modols.convert_to_class import convert_to_object
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine
+import requests
 import pandas as pd
 #from Models.user import users
 
@@ -51,6 +52,19 @@ class Clase(db.Model):
         self.precio = precio
         self.modalidad = modalidad
 
+@app.route('/ping')
+def do_ping():
+    ping = 'Ping ...'
+
+    response = ''
+    try:
+        response = requests.get('http://opensearch_node1:9200/iaps-index/_search')
+        print(response.text)
+    except requests.exceptions.RequestException as e:
+        print('\n Cannot reach the pong service.')
+        return 'Ping ...\n'
+
+    return 'Ping ... '+ response.text+ ' '+ str(type(response))+' \n'
 @app.route('/', methods=["POST","GET"])
 def index():
     #delete_all()

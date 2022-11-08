@@ -1,4 +1,4 @@
-from Models.clase import Clase
+from models import Clase
 
 def convert_to_object(dicc):
     lista = []

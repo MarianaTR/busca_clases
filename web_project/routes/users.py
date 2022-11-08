@@ -1,4 +1,4 @@
-from Models.user import users
+from models import users
 from utils.db import db
 from flask import request, redirect, render_template, url_for, Blueprint
 

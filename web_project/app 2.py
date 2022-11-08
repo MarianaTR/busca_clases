@@ -1,16 +1,56 @@
 from flask import Flask, render_template, request, redirect, url_for,session
 from modols.opensearch import search_query, add_document, search, delete_all
 from flask_sqlalchemy import SQLAlchemy
-from utils.db import base, engine, conection_db
+from utils.db import db
 from modols.convert_to_class import convert_to_object
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy import create_engine
 import requests
 import pandas as pd
-from models import Clase, users
+#from Models.user import users
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = conection_db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Clase.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+class users(db.Model):
+    _id = db.Column("id", db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    phone = db.Column(db.String(100))
+    universidad = db.Column(db.String(100))
+    cargo = db.Column(db.String(100))
+    direcc = db.Column(db.String(100))
+    clases = db.relationship('Clase')
+
+    def __init__(self, name, email, password, phone, uni, cargo, dire):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.phone = phone
+        self.universidad = uni
+        self.cargo = cargo
+        self.direcc = dire
+
+class Clase(db.Model):
+    _id = db.Column("id",db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    name = db.Column(db.String(100))
+    description = db.Column(db.Text())
+    duracion = db.Column(db.String(20))
+    precio = db.Column(db.String(20))
+    modalidad = db.Column(db.String(30))
+
+    def __init__(self, user_id, name, description, duracion,precio,modalidad):
+        self.user_id = user_id
+        self.name = name
+        self.description = description
+        self.duracion = duracion
+        self.precio = precio
+        self.modalidad = modalidad
 
 @app.route('/ping')
 def do_ping():
@@ -25,7 +65,6 @@ def do_ping():
         return 'Ping ...\n'
 
     return 'Ping ... '+ response.text+ ' '+ str(type(response))+' \n'
-
 @app.route('/', methods=["POST","GET"])
 def index():
     #delete_all()
@@ -47,18 +86,21 @@ def index():
 def hello_world():  # put application's code here
     print("aqui")
 
+
+
+
 @app.route('/profile/<usr>')
 def profile(usr):
     usr = users.query.filter_by(_id = usr).first()
     return render_template("profile.html", usr = usr)
 
-@app.route('/login', methods=["POST","GET"])
-def login():
+@app.route('/signin', methods=["POST","GET"])
+def signin():
+    #db.session.execute(f'DROP TABLE Clase')
     db.create_all()
     if request.method == "POST":
         email = request.form["email"]
         password = request.form['password']
-        # buscar un usuario con ese email
         user = users.query.filter_by(email=email).first()
         if user:
             if user.password == password:
@@ -70,10 +112,9 @@ def login():
     else:
         return render_template("signin.html")
 
-# session = Session()
-
-@app.route('/signin', methods=["POST", "GET"])
-def signin():
+@app.route('/login', methods=["POST","GET"])
+def login():
+    engine = create_engine('sqlite://', echo=False)
     #db.session.execute(f'DROP TABLE users')
     db.create_all()
     if request.method == "POST":
@@ -84,15 +125,10 @@ def signin():
         phone = request.form['phone']
         cargo = request.form['cargo']
         direc = request.form['dir']
-        # agregar usuario a la base de datos
-        user = users(user_name, email, password, universidad, phone, cargo, direc)
-        with engine.connect() as con:
-            session.add(user)
-            session.commit()
-            
+        user = users(user_name,email,password,phone,universidad,cargo,direc)
         db.session.add(user)
-        # user_id = users.query.filter_by(name=user_name).first()
-        # user_id = user_id._id
+        user_id = users.query.filter_by(name=user_name).first()
+        user_id = user_id._id
         try:
             db.session.commit()
             """print("pasee")

@@ -3,7 +3,7 @@ import requests
 
 
 
-host = 'localhost'
+host = 'opensearch_node1'
 port = 9200
 #auth = ('admin', 'admin') # For testing only. Don't store credentials in code.
 #ca_certs_path = '/full/path/to/root-ca.pem' # Provide a CA bundle if you use intermediate CAs with your root CA.

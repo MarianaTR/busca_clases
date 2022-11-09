@@ -70,7 +70,7 @@ def login():
 
             con.close()
         if user:
-            return render_template("profile.html", usr=user)
+            return render_template("my_profile.html", usr=user)
         else:
             return render_template("log_in.html")
     else:

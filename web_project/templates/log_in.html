@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link type="text/css" href='{{ url_for('static', filename='css/signin.css') }}'rel='stylesheet'/>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="/">BC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/signin">Sign In</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/login">Log In</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+</head>
+<body>
+      <div class="page">
+        <div class="container">
+          <div class="left">
+            <div class="login">Ingresa</div>
+            <div class="eula">Ingresa con tu email y contraseña</div>
+          </div>
+          <div class="right">
+            <svg viewBox="0 0 320 300">
+              <defs>
+                <linearGradient
+                                inkscape:collect="always"
+                                id="linearGradient"
+                                x1="13"
+                                y1="193.49992"
+                                x2="307"
+                                y2="193.49992"
+                                gradientUnits="userSpaceOnUse">
+                  <stop
+                        style="stop-color:#ff00ff;"
+                        offset="0"
+                        id="stop876" />
+                  <stop
+                        style="stop-color:#ff0000;"
+                        offset="1"
+                        id="stop878" />
+                </linearGradient>
+              </defs>
+              <path d="m 40,120.00016 239.99984,-3.2e-4 c 0,0 24.99263,0.79932 25.00016,35.00016 0.008,34.20084 -25.00016,35 -25.00016,35 h -239.99984 c 0,-0.0205 -25,4.01348 -25,38.5 0,34.48652 25,38.5 25,38.5 h 215 c 0,0 20,-0.99604 20,-25 0,-24.00396 -20,-25 -20,-25 h -190 c 0,0 -20,1.71033 -20,25 0,24.00396 20,25 20,25 h 168.57143" />
+            </svg>
+            <div class="form">
+              <label for="email">Email</label>
+              <input type="email" id="email">
+              <label for="password">Password</label>
+              <input type="password" id="password">
+              <input type="submit" id="submit" value="Submit">
+            </div>
+          </div>
+        </div>
+      </div>

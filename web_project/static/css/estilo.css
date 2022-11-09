@@ -1,0 +1,17 @@
+.containerSlider{
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-bottom: 600px;
+
+}
+
+.footer-dark {
+    padding:50px 0;
+    color:#f0f9ff;
+    background-color:#282d32;
+  }
+  
+  
+
+  
+  @media (max-width: 767.98px) { .border-sm-start-none { border-left: none !important; } }

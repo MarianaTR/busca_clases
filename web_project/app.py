@@ -7,6 +7,7 @@ import requests
 import pandas as pd
 from models import Clase, users
 from User import User
+import logging
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = conection_db
@@ -69,19 +70,28 @@ def profile(usr):
 
 @app.route('/log_in', methods=["POST","GET"])
 def login():
+    logging.warning("AQUI ESTOY en login")
     if request.method == "POST":
+        logging.warning("AQUI ESTOY en post")
+        logging.warning("AQUI ESTOY en post", str(request))
+        logging.warning("AQUI ESTOY en post", str(request.form))
+        logging.warning("AQUI ESTOY en post", str(request.form["email"]))
         email = request.form["email"]
         password = request.form['password']
         # buscar un usuario con ese email
         with engine.connect() as con:
+            # con.execute(
+            #     "SELECT * FROM users WHERE email = %s AND password = %s", email, password)
             con.execute(
-                "SELECT * FROM users WHERE email = %s AND password = %s", email, password)
+                "SELECT * FROM users")
             result = con.fetchall()
-
+            logging.warning("AQUI ESTOY", str(result))
+            user_list = []
             for row in result:
                 user = User(row[0], row[1], row[2], row[3],
                             row[4], row[5], row[6], row[7])
-
+                user_list.append(user)
+            logging.warning(user_list)
             con.close()
         if user:
             return render_template("my_profile.html", usr=user)

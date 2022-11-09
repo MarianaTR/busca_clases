@@ -50,7 +50,7 @@ def hello_world():  # put application's code here
 @app.route('/profile/<usr>')
 def profile(usr):
     usr = users.query.filter_by(_id = usr).first()
-    return render_template("profile.html", usr = usr)
+    return render_template("my_profile.html", usr = usr)
 
 @app.route('/login', methods=["POST","GET"])
 def login():
@@ -62,13 +62,13 @@ def login():
         user = users.query.filter_by(email=email).first()
         if user:
             if user.password == password:
-                return render_template("profile.html", usr=user)
+                return render_template("my_profile.html", usr=user)
             else:
                 return redirect(url_for("signin"))
         else:
             return redirect(url_for("signin"))
     else:
-        return render_template("signin.html")
+        return render_template("sign_in.html")
 
 # session = Session()
 
@@ -115,9 +115,9 @@ def signin():
             pass
         else:
         """
-        return redirect(url_for("profile", usr=user_id))
+        return redirect(url_for("my_profile", usr=user_id))
     else:
-        return render_template("login.html")
+        return render_template("log_in.html")
 
 @app.route('/admin')
 def admin():

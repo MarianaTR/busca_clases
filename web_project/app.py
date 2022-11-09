@@ -50,29 +50,30 @@ def hello_world():  # put application's code here
 
 @app.route('/my_profile/<usr>')
 def profile(usr):
-    usr = users.query.filter_by(_id = usr).first()
+    # usr = users.query.filter_by(_id = usr).first()
     return render_template("my_profile.html", usr = usr)
 
 @app.route('/log_in', methods=["POST","GET"])
 def login():
     if request.method == "POST":
+        print("AQUI---1 . ENTRE AL POST")
         email = request.form["email"]
         password = request.form['password']
         # buscar un usuario con ese email
         with engine.connect() as con:
-            con.execute(
-                "SELECT * FROM users WHERE email = %s AND password = %s", email, password)
+            print("AQUI---2 . ENTRE AL ENGINE")
+            con.execute("SELECT * FROM users WHERE email = %s AND password = %s", email, password)
             result = con.fetchall()
-
-            for row in result:
-                user = User(row[0], row[1], row[2], row[3],
-                            row[4], row[5], row[6], row[7])
+            print("AQUI---3 RESULT",result)
+            # for row in result:
+            #     user = User(row[0], row[1], row[2], row[3],
+            #                 row[4], row[5], row[6], row[7])
 
             con.close()
-        if user:
-            return render_template("profile.html", usr=user)
-        else:
-            return render_template("log_in.html")
+        # if user:
+        #     return render_template("profile.html", usr=user)
+        # else:
+        #     return render_template("log_in.html")
     else:
         return render_template("log_in.html")
 
@@ -159,5 +160,7 @@ if __name__ == '__main__':
     db.create_all()
     
     app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, page_not_found)
+
 
     app.run()

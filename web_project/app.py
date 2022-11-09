@@ -13,6 +13,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = conection_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+@app.route('/sign_in', methods=["POST"])
+def regis():
+    if request.method == 'POST' and 'username' and 'password' and 'email' and 'nombre' and 'apellido' in request.form:
+        username = request.form['username']
+        nombre = request.form['nombre']
+        apellido = request.form['apellido']
+        mail = request.form['email']
+        celular = request.form['celular']
+        # AQUI DEBE CREARSE EL USUARIO
+        return render_template('index.html')
+    else: 
+        print("PAS MAL")
+        return render_template('log_in.html')
+
 @app.route('/ping')
 def do_ping():
     ping = 'Ping ...'

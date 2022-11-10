@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <!-- Design by foolishdeveloper.com -->
-    <link type="text/css" href='{{ url_for('static', filename='css/login.css') }}'rel='stylesheet'/>
+    <link type="text/css" href='{{ url_for('static', filename='css/signin.css') }}'rel='stylesheet'/>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -10,24 +10,24 @@
     <!--Stylesheet-->
 </head>
 <body>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">BC</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <a class="nav-link active" aria-current="page" href="/log_in">Inicia Sesión</a>
-              </li>
-              <li class="d-flex nav-item">
-              </li>
-          </ul>        
-          </div>
-        </div>
-    </nav>
     <div class="background">
     </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">BC</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <a class="nav-link active" aria-current="page" href="/log_in">Inicia Sesión</a>
+            </li>
+            <li class="d-flex nav-item">
+            </li>
+        </ul>        
+        </div>
+      </div>
+    </nav>
     <form method="post" action="{{ url_for('regis') }}">
         <h3 style="color: white">Registrate aquí </h3>
 
@@ -51,8 +51,11 @@
                 <label for="Celular">Celular</label>
             <input type="text" placeholder="+56978787878" id="celular" name="celular">
     
-            <label for="cargo">Profesor o Estudiante</label>
-            <input type="text" placeholder="Profesor" id="cargo" name='cargo'>
+            <label for="cargo">Maestro o aprendíz:</label>
+            <select name="cargo" id="cargo" class="labelMA">
+              <option value="maestro">Maestro</option>
+              <option value="aprendiz">Aprendiz</option>
+            </select>
 
             <label for="direcc">Dirección</label>
             <input type="text" placeholder="Tu dirección" id="direcc" name="direcc">
@@ -61,10 +64,8 @@
           </div>
 
         <div>
-            
-        </div>
-
-        <button>Regístrate</button>
+          <button>Regístrate</button>
+        </div> 
     </form>
 </body>
 </html>

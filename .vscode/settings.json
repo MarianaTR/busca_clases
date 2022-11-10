@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "kubernetes://schema/apps/v1%40deployment": "file:///Users/cristianveralyon/Desktop/busca_clases/web_project/deployment.yaml"
+  }
+}

@@ -111,7 +111,6 @@ def admin():
 
 @app.route('/create_class/<user>', methods=['POST','GET'])
 def create_clases(user):
-    db.create_all()
     if request.method == "POST":
         name = request.form["user"]
         description = request.form["description"]

@@ -13,23 +13,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = conection_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-@app.route('/sign_in', methods=["POST"])
-def regis():
-    if request.method == 'POST' and (('password' and 'email' and 'nombre' and 'apellido' and 'celular' and 'cargo' and 'direcc') in request.form):
-        nombre = request.form['nombre'] + request.form['apellido']
-        mail = request.form['email']
-        celular = request.form['celular']
-        password = request.form['password']
-        universidad = request.form['universidad']
-        cargo = request.form['cargo']
-        direc = request.form['direcc']
-        user = users(nombre, mail, password, celular, universidad, cargo, direc)
-        
-        # AQUI DEBE CREARSE EL USUARIO
-        return render_template('index.html')
-    else: 
-        print("PAS MAL")
-        return render_template('log_in.html')
+
 
 @app.route('/ping')
 def do_ping():
@@ -95,52 +79,29 @@ def login():
 
 # session = Session()
 
-@app.route('/sign_in', methods=["POST", "GET"])
-def signin():
-    #db.session.execute(f'DROP TABLE users')
-    # db.create_all()
-    if request.method == "POST":
-        user_name = request.form["user"]
-        email = request.form["email"]
-        password = request.form['password']
-        universidad = request.form['uni']
-        phone = request.form['phone']
-        cargo = request.form['cargo']
-        direc = request.form['dir']
-        # agregar usuario a la base de datos
-        user = users(user_name, email, password, universidad, phone, cargo, direc)
-        with engine.connect() as con:
-            session.add(user)
-            session.commit()
-            
-        db.session.add(user)
-        # user_id = users.query.filter_by(name=user_name).first()
-        # user_id = user_id._id
-        try:
-            db.session.commit()
-            """print("pasee")
-            user_id = users.query.filter_by(name=user_name).first()
-            user_id= user_id._id
-            print(user_id)
-            clase = Clase(user_id,"futbol","asddnksdfhhs sdfksdhfuhs sdfhsdhfuh")
-            print(clase)
-            db.session.add(clase)
-            db.session.commit()
-            add_document(user_id,"futbol","asjdhlass sdifhsudhf")
-            print(Clase.query.filter_by(name="pilate").first())"""
-        except:
-            return render_template("sign_in.html")
 
-            db.session.rollback()
-        """
-        found_user = users.query.filter_by(name=user).first()
-        if found_user:
-            pass
-        else:
-        """
+@app.route('/sign_in', methods=["POST","GET"])
+def regis():
+    if request.method == 'POST' and (('password' and 'email' and 'nombre' and 'apellido' and 'celular' and 'cargo' and 'direcc') in request.form):
+        nombre = request.form['nombre'] + request.form['apellido']
+        mail = request.form['email']
+        celular = request.form['celular']
+        password = request.form['password']
+        universidad = request.form['universidad']
+        cargo = request.form['cargo']
+        direc = request.form['direcc']
+        user = users(nombre, mail, password, celular,
+                    universidad, cargo, direc)
+        #agregar a la base de datos un usuario
+        resp = engine.connect().execute(
+            'INSERT INTO users(name, email, password, phone, universidad, cargo, direcc) VALUES (%s, %s, %s, %s, %s, %s, %s)', nombre, mail, password, celular, universidad, cargo, direc)
+        logging.warning("respuesta de bdd: %s", resp)
+            
         return redirect(url_for("my_profile", usuario=user))
     else:
         return render_template("sign_in.html")
+
+
 
 @app.route('/admin')
 def admin():

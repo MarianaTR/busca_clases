@@ -74,11 +74,20 @@ def login():
         if resp:
             user = User(resp[0], resp[1], resp[2], resp[3], 
                         resp[4], resp[5], resp[6], resp[7])
+            resp_clases = engine.connect().execute(
+            "SELECT * FROM clase WHERE user_id = %s", user.id)
+
+            resp_clases = resp_clases.fetchall()
+
+            logging.warning(resp_clases)
+
+            
+            
             session['user'] = user.to_JSON()
             session['logged_in'] = 'True'
 
 
-            return render_template("my_profile.html", usuario=user)
+            return render_template("my_profile.html", usuario=user, clases = resp_clases)
         else:
             return render_template("log_in.html", logged=session['logged_in'])
     else:

@@ -27,7 +27,8 @@ def logout():
 def index():
     if request.method == "POST":
         busqueda = request.form["search"]
-        if busqueda != "":
+        logging.warning("respuesta de bdd: %s", busqueda)
+        if busqueda :
             res = search_query(busqueda)
             if res['hits']['hits']:
                 value = convert_to_object(res['hits']['hits'])
@@ -37,7 +38,7 @@ def index():
 
             return render_template("search_result.html", clases=value)
         else:
-            redirect(url_for("search"))
+            return redirect(url_for("search"))
     else:
 
         return render_template("index.html")

@@ -2,8 +2,7 @@ from opensearchpy import OpenSearch
 import requests
 
 
-
-host = 'opensearch_node1'
+host = 'http://34.222.58.202'
 port = 9200
 #auth = ('admin', 'admin') # For testing only. Don't store credentials in code.
 #ca_certs_path = '/full/path/to/root-ca.pem' # Provide a CA bundle if you use intermediate CAs with your root CA.
@@ -37,13 +36,13 @@ def search_query(q):
     # Search for the document.
 
     query = {
-      "size": 5,
-      "query": {
-        "multi_match": {
-          "query" : q,
-          "fields": ["name","description","modalidad"]
+        "size": 5,
+        "query": {
+            "multi_match": {
+                "query" : q,
+                "fields": ["name","description","modalidad"]
+            }
         }
-      }
     }
 
     response = client.search(
@@ -70,7 +69,7 @@ def search():
     #print('\nSearch results:')
     #print(response)
 """
-    response = requests.get('http://opensearch_node1:9200/iaps-index/_search')
+    response = requests.get('http://34.222.58.202:9200/iaps-index/_search')
     response = response.json()
     return response
 

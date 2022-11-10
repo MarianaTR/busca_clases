@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for,session
 from modols.opensearch import search_query, add_document, search, delete_all
 from flask_sqlalchemy import SQLAlchemy
-from utils.db import base, engine, conection_db
+from utils.db import base, engine, conection_db, Session
 from modols.convert_to_class import convert_to_object
 import requests
 import pandas as pd
@@ -13,15 +13,18 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = conection_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
 @app.route('/sign_in', methods=["POST"])
 def regis():
-    if request.method == 'POST' and 'username' and 'password' and 'email' and 'nombre' and 'apellido' in request.form:
-        username = request.form['username']
-        nombre = request.form['nombre']
-        apellido = request.form['apellido']
+    if request.method == 'POST' and (('password' and 'email' and 'nombre' and 'apellido' and 'celular' and 'cargo' and 'direcc') in request.form):
+        nombre = request.form['nombre'] + request.form['apellido']
         mail = request.form['email']
         celular = request.form['celular']
+        password = request.form['password']
+        universidad = request.form['universidad']
+        cargo = request.form['cargo']
+        direc = request.form['direcc']
+        user = users(nombre, mail, password, celular, universidad, cargo, direc)
+        
         # AQUI DEBE CREARSE EL USUARIO
         return render_template('index.html')
     else: 
@@ -65,36 +68,26 @@ def hello_world():  # put application's code here
 
 @app.route('/my_profile/<usr>')
 def profile(usr):
-    usr = users.query.filter_by(_id = usr).first()
-    return render_template("my_profile.html", usr = usr)
+    return render_template("my_profile.html", usuario = usr)
 
 @app.route('/log_in', methods=["POST","GET"])
 def login():
-    logging.warning("AQUI ESTOY en login")
     if request.method == "POST":
-        logging.warning("AQUI ESTOY en post")
-        logging.warning("AQUI ESTOY en post", str(request))
-        logging.warning("AQUI ESTOY en post", str(request.form))
-        logging.warning("AQUI ESTOY en post", str(request.form["email"]))
-        email = request.form["email"]
+        logging.warning("AQUI ESTOY en post-email %s", request.form["email"])
+        logging.warning("AQUI ESTOY en post-pass %s", request.form["password"])
+        email = request.form['email']
         password = request.form['password']
         # buscar un usuario con ese email
-        with engine.connect() as con:
-            # con.execute(
-            #     "SELECT * FROM users WHERE email = %s AND password = %s", email, password)
-            con.execute(
-                "SELECT * FROM users")
-            result = con.fetchall()
-            logging.warning("AQUI ESTOY", str(result))
-            user_list = []
-            for row in result:
-                user = User(row[0], row[1], row[2], row[3],
-                            row[4], row[5], row[6], row[7])
-                user_list.append(user)
-            logging.warning(user_list)
-            con.close()
-        if user:
-            return render_template("my_profile.html", usr=user)
+        resp = engine.connect().execute(
+            "SELECT * FROM users WHERE email = %s AND password = %s", email, password)
+        resp = resp.fetchone()
+        logging.warning("respuesta de bdd: %s", resp)
+        if resp:
+            user = User(resp[0], resp[1], resp[2], resp[3], 
+                        resp[4], resp[5], resp[6], resp[7])
+            
+            # Session['user'] = user
+            return render_template("my_profile.html", usuario=user)
         else:
             return render_template("log_in.html")
     else:
@@ -145,7 +138,7 @@ def signin():
             pass
         else:
         """
-        return redirect(url_for("my_profile", usr=user))
+        return redirect(url_for("my_profile", usuario=user))
     else:
         return render_template("sign_in.html")
 
@@ -176,9 +169,6 @@ def page_not_found(e):
     return "<h1> Page Not Found 😦 </h1>", 404
 
 
-"""@app.route("/<usr>")
-def otro(usr):
-    return f"<h1>{usr}</h1>"""
 if __name__ == '__main__':
     db.create_all()
     

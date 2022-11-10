@@ -9,22 +9,24 @@ from models import Clase, users
 from User import User
 import logging
 
-global_user = User(9876, 'INVIADO', '', '', '', '', '', '')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = conection_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'super-secret-key'
 db = SQLAlchemy(app)
 
 
 @app.route('/logout', methods=["POST", "GET"])
 def logout():
-    globals()['global_user'] = User(9876, 'INVIADO', '', '', '', '', '', '')
-    return render_template("index.html")
+    session.pop('user', None)
+    session['logged_in'] = "False"
+    return render_template("index.html", logged=session['logged_in'])
 
 
 @app.route('/', methods=["POST","GET"])
 def index():
+    session['logged_in'] = "False"
     if request.method == "POST":
         busqueda = request.form["search"]
         logging.warning("respuesta de bdd: %s", busqueda)
@@ -36,20 +38,25 @@ def index():
                 #res = search()
                 value = convert_to_object(res['hits']['hits'])
 
+
             return render_template("search_result.html", clases=value)
         else:
             return redirect(url_for("search"))
     else:
 
-        return render_template("index.html")
+        return render_template("index.html", logged = session['logged_in'])
+
 
 
 @app.route('/my_profile', methods=["GET"])
-def profile(usr=globals()['global_user']):
-    logging.warning('USUARIO LOGEADO: %s', usr)
-    if usr.id == 9876:
-        return render_template("log_in.html")
-    return render_template("my_profile.html", usuario = usr)
+def profile():
+    if 'user' in session:
+        usr = session['user']
+        logging.warning('USUARIO LOGEADO: %s', usr)
+        return render_template("my_profile.html", usuario = usr)
+    else:
+        return render_template("log_in.html", logged=session['logged_in'])
+    
 
 @app.route('/log_in', methods=["POST","GET"])
 def login():
@@ -66,14 +73,20 @@ def login():
         if resp:
             user = User(resp[0], resp[1], resp[2], resp[3], 
                         resp[4], resp[5], resp[6], resp[7])
+
             globals()['global_user'] = user
 
             # Session['user'] = user
+
+            session['user'] = user.to_JSON()
+            session['logged_in'] = 'True'
+
+
             return render_template("my_profile.html", usuario=user)
         else:
-            return render_template("log_in.html")
+            return render_template("log_in.html", logged=session['logged_in'])
     else:
-        return render_template("log_in.html")
+        return render_template("log_in.html", logged=session['logged_in'])
 
 @app.route('/sign_in', methods=["POST","GET"])
 def regis():
@@ -99,10 +112,14 @@ def regis():
         if resp:
             user = User(resp[0], resp[1], resp[2], resp[3],
                         resp[4], resp[5], resp[6], resp[7])
+
             globals()['global_user'] = user
+            session['user'] = user.to_JSON()
+            session['logged_in'] = 'True'
             busqueda = search_class_by_profile(resp[0])
             value = convert_to_object(busqueda)
             return render_template("my_profile.html", usuario=user, clases =value)
+
         else:
             return render_template("sign_in.html")
     else:
@@ -117,24 +134,27 @@ def create_clases():
         duracion = request.form['duracion']
         precio = request.form['precio']
         modalidad = request.form['modalidad']
-        user_id = globals()['global_user'].id
+        user_id = session['user']['id']
         clase = Clase(user_id, name, description,duracion,precio,modalidad)
         resp = engine.connect().execute(
             'INSERT INTO clase(user_id, name, description,duracion,precio,modalidad) VALUES (%s, %s, %s, %s, %s, %s)', user_id, name, description, duracion, precio, modalidad)
         add_document(user_id,clase)
-        return redirect(url_for("index"))
+        
+        return render_template("my_profile.html", usuario=session['user'])
 
     else:
         return  render_template("create_clase.html")
 
 @app.route('/search', methods=['GET'])
 def search():
+
     resp = engine.connect().execute(
         "SELECT * FROM clase limit 100")
 
     value = convert_to_class_bd(resp)
 
-    return render_template("search_result.html", clases = value)
+    return render_template("search_result.html", clases = value, logged=session['logged_in'])
+
 
 
 def page_not_found(e):

@@ -12,6 +12,7 @@
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               {% if logged == 'True' %}
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/sign_in" >Crea una cuenta</a>
@@ -20,6 +21,7 @@
                   <a class="nav-link active" aria-current="page" href="/log_in">Inicia Sesión</a>
                </li>
               </ul>
+               {% endif %}
             </div>
           </div>
         </nav>

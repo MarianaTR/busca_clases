@@ -77,5 +77,61 @@
     </div>
   </div>
 </section>
+
+    <section style="background-color: #eee;">
+
+            <div class="container py-5">
+
+            <div class="row justify-content-center mb-3">
+              <div class="col-md-12 col-xl-10">
+
+                <div class="card shadow-0 border rounded-3">
+                    {% for clase in clases %}
+                    <div class="card-body">
+                    <div class="row">
+
+
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                        <h5> {{ clase[0].name }} </h5>
+                        <div class="d-flex flex-row">
+                            <div class="text-danger mb-1 me-2">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            </div>
+                            <span>310</span>
+                        </div>
+                        <div class="mt-1 mb-0 text-muted small">
+                            <span>{{ clase[0].duracion }} </span>
+                            <span class="text-primary"> • </span>
+
+                        </div>
+                        <div class="mb-2 text-muted small">
+                            <span>Modalidad: {{ clase[0].modalidad }} </span>
+
+                        </div>
+                        <p class="text-truncate mb-4 mb-md-0">
+                            {{ clase[0].description }}
+                        </p>
+                        </div>
+                        <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                        <div class="d-flex flex-row align-items-center mb-1">
+                            <h4 class="mb-1 me-1">{{ clase[0].precio }}</h4>
+                        </div>
+                        <h6 class="text-success">Algun otro detalle</h6>
+                        <div class="d-flex flex-column mt-4">
+                            <h5> {{ clase[1].name }} </h5>
+                            <h5> {{ clase[1].phone }} </h5>
+                        </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </section>
 </body>
 </html>

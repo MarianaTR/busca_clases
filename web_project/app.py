@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for,session
-from modols.opensearch import search_query, add_document, search, delete_all
+from modols.opensearch import search_query, add_document, search_class_by_profile
 from flask_sqlalchemy import SQLAlchemy
 from utils.db import base, engine, conection_db, Session
-from modols.convert_to_class import convert_to_object
+from modols.convert_to_class import convert_to_object, convert_to_class_bd
 import requests
 import pandas as pd
 from models import Clase, users
@@ -27,18 +27,19 @@ def logout():
 def index():
     if request.method == "POST":
         busqueda = request.form["search"]
-        res = search_query(busqueda)
-        if res['hits']['hits']:
-            value = convert_to_object(res['hits']['hits'])
-        else:
-            #res = search()
-            value = convert_to_object(res['hits']['hits'])
+        if busqueda != "":
+            res = search_query(busqueda)
+            if res['hits']['hits']:
+                value = convert_to_object(res['hits']['hits'])
+            else:
+                #res = search()
+                value = convert_to_object(res['hits']['hits'])
 
-        return render_template("search_result.html", clases=value)
+            return render_template("search_result.html", clases=value)
+        else:
+            redirect(url_for("search"))
     else:
-        """
-        res = search()
-        value = convert_to_object(res['hits']['hits'])"""
+
         return render_template("index.html")
 
 
@@ -65,6 +66,7 @@ def login():
             user = User(resp[0], resp[1], resp[2], resp[3], 
                         resp[4], resp[5], resp[6], resp[7])
             globals()['global_user'] = user
+
             # Session['user'] = user
             return render_template("my_profile.html", usuario=user)
         else:
@@ -97,7 +99,9 @@ def regis():
             user = User(resp[0], resp[1], resp[2], resp[3],
                         resp[4], resp[5], resp[6], resp[7])
             globals()['global_user'] = user
-            return render_template("my_profile.html", usuario=user)
+            busqueda = search_class_by_profile(resp[0])
+            value = convert_to_object(busqueda)
+            return render_template("my_profile.html", usuario=user, clases =value)
         else:
             return render_template("sign_in.html")
     else:
@@ -124,9 +128,12 @@ def create_clases():
 
 @app.route('/search', methods=['GET'])
 def search():
-    res = search()
-    value = convert_to_object(res['hits']['hits'])
-    return render_template("search_result.html", clases=value)
+    resp = engine.connect().execute(
+        "SELECT * FROM clase limit 100")
+
+    value = convert_to_class_bd(resp)
+
+    return render_template("search_result.html", clases = value)
 
 
 def page_not_found(e):

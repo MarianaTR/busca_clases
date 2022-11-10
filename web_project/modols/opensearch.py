@@ -1,7 +1,7 @@
 from opensearchpy import OpenSearch
 import requests
 import logging
-
+import sys
 
 host = '34.222.58.202'
 port = 9200
@@ -37,7 +37,7 @@ def search_query(q):
     # Search for the document.
 
     query = {
-        "size": 5,
+        "size": 100,
         "query": {
             "multi_match": {
                 "query" : q,
@@ -45,37 +45,58 @@ def search_query(q):
             }
         }
     }
-    logging.warning('USUARIO LOGEADO: %s', q)
-    logging.warning('USUARIO LOGEADO: %s', client.ping())
 
     response = client.search(
         body = query,
         index = index_name
     )
-    logging.warning('USUARIO LOGEADO: %s', response)
-    #print('\nSearch results:')
-    #print(response)
 
     return response
 
+def search_class_by_profile(id):
+    query = {
+        "size": 100,
+        "query": {
+            "multi_match": {
+                "query": id,
+                "fields": ["user_id"]
+            }
+        }
+    }
+    logging.warning('USUARIO LOGEADO: %s', id)
+    logging.warning('USUARIO LOGEADO: %s', client.ping())
+
+    response = client.search(
+        body=query,
+        index=index_name
+    )
+    logging.warning('USUARIO LOGEADO: %s', response)
+    # print('\nSearch results:')
+    # print(response)
+
+    return response
 def search():
     # Search for the document.
-    """
+    sys.setrecursionlimit(5000)
+    logging.warning('USUARIO LOGEADO: %s', sys.setrecursionlimit(5000))
     query = {
+        "size": 100,
         "query": {
         }
     }
 
+    logging.warning('USUARIO LOGEADO: %s', client.ping())
     response = client.search(
         body=query,
         index=index_name
     )
     #print('\nSearch results:')
     #print(response)
+    return response
 """
     response = requests.get('http://34.222.58.202:9200/iaps-index/_search')
-    response = response.json()
-    return response
+    response = response.json()"""
+
 
 
 def add_document(user_id,clase):

@@ -110,18 +110,18 @@ def admin():
     return render_template("view.html", values=Clase.query.all())
 
 @app.route('/create_class/<user>', methods=['POST','GET'])
-def create_clases(user):
+def create_clases(user=global_user):
     if request.method == "POST":
         name = request.form["user"]
         description = request.form["description"]
         duracion = request.form['duracion']
         precio = request.form['precio']
         modalidad = request.form['modalidad']
-        user_id = user
+        user_id = user['id']
         clase = Clase(user_id, name, description,duracion,precio,modalidad)
-        db.session.add(clase)
-        db.session.commit()
-        add_document(user_id, clase)
+        resp = engine.connect().execute(
+            'INSERT INTO clase(user_id, name, description,duracion,precio,modalidad) VALUES (%s, %s, %s, %s, %s, %s)', user_id, name, description, duracion, precio, modalidad)
+
         return redirect(url_for("index"))
     else:
         return  render_template("create_clase.html")

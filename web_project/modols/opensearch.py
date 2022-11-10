@@ -1,8 +1,9 @@
 from opensearchpy import OpenSearch
 import requests
+import logging
 
 
-host = 'http://34.222.58.202'
+host = '34.222.58.202'
 port = 9200
 #auth = ('admin', 'admin') # For testing only. Don't store credentials in code.
 #ca_certs_path = '/full/path/to/root-ca.pem' # Provide a CA bundle if you use intermediate CAs with your root CA.
@@ -44,11 +45,14 @@ def search_query(q):
             }
         }
     }
+    logging.warning('USUARIO LOGEADO: %s', q)
+    logging.warning('USUARIO LOGEADO: %s', client.ping())
 
     response = client.search(
         body = query,
         index = index_name
     )
+    logging.warning('USUARIO LOGEADO: %s', response)
     #print('\nSearch results:')
     #print(response)
 

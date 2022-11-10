@@ -19,8 +19,7 @@ db = SQLAlchemy(app)
 
 @app.route('/logout', methods=["POST", "GET"])
 def logout():
-    if request.method == "POST":   
-        globals()['global_user'] = User(9876, 'INVIADO', '', '', '', '', '', '')
+    globals()['global_user'] = User(9876, 'INVIADO', '', '', '', '', '', '')
     return render_template("index.html")
 
 
@@ -116,8 +115,10 @@ def create_clases():
         clase = Clase(user_id, name, description,duracion,precio,modalidad)
         resp = engine.connect().execute(
             'INSERT INTO clase(user_id, name, description,duracion,precio,modalidad) VALUES (%s, %s, %s, %s, %s, %s)', user_id, name, description, duracion, precio, modalidad)
+
         add_document(user_id,clase)
         return redirect(url_for("index"))
+
     else:
         return  render_template("create_clase.html")
 

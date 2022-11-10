@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: busca-clase-opensearch2-service
+spec:
+  selector:
+    app: opensearch-node2
+  ports:
+  - protocol: "TCP"
+    port: 9600
+    targetPort: 9600
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opensearch-node2
+spec:
+  selector:
+    matchLabels:
+      app: opensearch-node2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: opensearch-node2
+    spec:
+      containers:
+      - name: opensearch-node2
+        image: opensearchproject/opensearch:latest
+        imagePullPolicy: Never
+        env:
+          - name: cluster.name
+            value: opensearch-cluster
+          - name: node.name
+            value: opensearch_node2
+          - name: discovery.seed_hosts
+            value: opensearch_node1,opensearch_node2
+          - name: cluster.initial_cluster_manager_nodes
+            value: opensearch_node1,opensearch_node2
+          - name: bootstrap.memory_lock
+            value: "true" # along with the memlock settings below, disables swapping
+
+        ports:
+        - containerPort: 9600
+
+}

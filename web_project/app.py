@@ -26,7 +26,6 @@ def logout():
 
 @app.route('/', methods=["POST","GET"])
 def index():
-    session['logged_in'] = "False"
     if request.method == "POST":
         busqueda = request.form["search"]
         logging.warning("respuesta de bdd: %s", busqueda)
@@ -43,8 +42,10 @@ def index():
         else:
             return redirect(url_for("search"))
     else:
-
-        return render_template("index.html", logged = session['logged_in'])
+        if 'logged_in' in session:
+            return render_template("index.html", logged=session['logged_in'])
+        else:
+            return render_template("index.html", logged="False")
 
 
 
@@ -73,11 +74,6 @@ def login():
         if resp:
             user = User(resp[0], resp[1], resp[2], resp[3], 
                         resp[4], resp[5], resp[6], resp[7])
-
-            globals()['global_user'] = user
-
-            # Session['user'] = user
-
             session['user'] = user.to_JSON()
             session['logged_in'] = 'True'
 
@@ -113,7 +109,6 @@ def regis():
             user = User(resp[0], resp[1], resp[2], resp[3],
                         resp[4], resp[5], resp[6], resp[7])
 
-            globals()['global_user'] = user
             session['user'] = user.to_JSON()
             session['logged_in'] = 'True'
             busqueda = search_class_by_profile(resp[0])

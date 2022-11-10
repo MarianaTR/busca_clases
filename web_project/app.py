@@ -33,12 +33,13 @@ def index():
         else:
             #res = search()
             value = convert_to_object(res['hits']['hits'])
-        logging.warning('USUARIO LOGEADO: %s', value)
+
         return render_template("search_result.html", clases=value)
     else:
+        """
         res = search()
-        value = convert_to_object(res['hits']['hits'])
-        return render_template("index.html", values=value)
+        value = convert_to_object(res['hits']['hits'])"""
+        return render_template("index.html")
 
 
 @app.route('/my_profile', methods=["GET"])
@@ -115,12 +116,17 @@ def create_clases():
         clase = Clase(user_id, name, description,duracion,precio,modalidad)
         resp = engine.connect().execute(
             'INSERT INTO clase(user_id, name, description,duracion,precio,modalidad) VALUES (%s, %s, %s, %s, %s, %s)', user_id, name, description, duracion, precio, modalidad)
-
         add_document(user_id,clase)
         return redirect(url_for("index"))
 
     else:
         return  render_template("create_clase.html")
+
+@app.route('/search', methods=['GET'])
+def search():
+    res = search()
+    value = convert_to_object(res['hits']['hits'])
+    return render_template("search_result.html", clases=value)
 
 
 def page_not_found(e):

@@ -109,7 +109,7 @@ def regis():
 def admin():
     return render_template("view.html", values=Clase.query.all())
 
-@app.route('/create_class/<user>', methods=['POST','GET'])
+@app.route('/create_clase', methods=['POST','GET'])
 def create_clases(user=global_user):
     if request.method == "POST":
         name = request.form["user"]
